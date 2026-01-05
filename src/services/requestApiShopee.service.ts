@@ -3,6 +3,18 @@ import { InfoSellerConfig } from "../config.js";
 import { signPartner } from "./sign.service.js";
 
 // ====================== TYPE AND INTERFACE =======================
+
+export interface ShopeeEnvelope<TResponse> {
+    error: string;       // "" quando OK
+    message: string;     // "" quando OK
+    warning?: string;    // pode vir "" ou não vir
+    request_id: string;
+
+    response: TResponse;
+
+    debug_message?: string; /** Geralmente vem vazio quando OK */
+}
+
 type AxiosMethods = "get" | "post";
 
 type AxiosArgs = {

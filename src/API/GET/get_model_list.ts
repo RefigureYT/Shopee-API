@@ -1,16 +1,7 @@
 import { InfoSellerConfig } from "../../config.js";
-import { isHttpRequestError, shopeeGet } from "../../services/requestApiShopee.service.js";
+import { isHttpRequestError, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
 
 type ShopeeBool = boolean | 0 | 1;
-
-export interface ShopeeEnvelope<T> {
-    error: string;
-    message: string;
-    warning?: string;
-    request_id: string;
-    response: T;
-    debug_message?: string;
-}
 
 export type GetModelListResponse = ShopeeEnvelope<{
     tier_variation?: Array<{

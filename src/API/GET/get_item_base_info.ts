@@ -1,56 +1,49 @@
 import { InfoSellerConfig } from "../../config.js"
-import { isHttpRequestError, shopeeGet } from "../../services/requestApiShopee.service.js";
+import { isHttpRequestError, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
 import { GetItemListItemStatus } from "./get_item_list.js";
 
-export interface GetItemBaseInfoResponse {
-    error: string;       // "" quando OK
-    message: string;     // "" quando OK
-    warning?: string;    // pode vir "" ou não vir
-    request_id: string;
+type GetItemBaseInfoResponse = ShopeeEnvelope<{
+    item_list: Array<{
+        item_id: number;
+        item_name?: string;
+        item_sku?: string;
+        item_status?: GetItemListItemStatus;
+        category_id?: number;
+        description?: string;
 
-    response: {
-        item_list: Array<{
-            item_id: number;
-            item_name?: string;
-            item_sku?: string;
-            item_status?: GetItemListItemStatus;
-            category_id?: number;
-            description?: string;
+        brand?: {
+            brand_id?: number;
+            original_brand_name?: string;
+        };
 
-            brand?: {
-                brand_id?: number;
-                original_brand_name?: string;
-            };
+        image?: {
+            image_id_list?: string[];
+            image_url_list?: string[];
+        };
 
-            image?: {
-                image_id_list?: string[];
-                image_url_list?: string[];
-            };
+        weight?: number;
+        package_length?: number;
+        package_width?: number;
+        package_height?: number;
+        days_to_ship?: number;
 
-            weight?: number;
-            package_length?: number;
-            package_width?: number;
-            package_height?: number;
-            days_to_ship?: number;
-
-            logistic_info?: Array<{
-                logistic_id?: number;
-                logistic_name?: string;
-                enabled?: boolean;
-                is_free?: boolean;
-            }>;
-
-            has_model?: boolean | 0 | 1;
-
-            update_time?: number;
-            create_time?: number;
-
-            tag?: {
-                kit?: boolean;
-            };
+        logistic_info?: Array<{
+            logistic_id?: number;
+            logistic_name?: string;
+            enabled?: boolean;
+            is_free?: boolean;
         }>;
-    };
-}
+
+        has_model?: boolean | 0 | 1;
+
+        update_time?: number;
+        create_time?: number;
+
+        tag?: {
+            kit?: boolean;
+        };
+    }>;
+}>
 
 export async function get_item_base_info(itemIdList: number[]): Promise<GetItemBaseInfoResponse> {
     const url = InfoSellerConfig.host + "/api/v2/product/get_item_base_info";
@@ -74,7 +67,7 @@ export async function get_item_base_info(itemIdList: number[]): Promise<GetItemB
             `[Shopee][API] ${response.error}: ${response.message || "Sem mensagem"}`
         );
     }
-    
+
     return response;
 }
 

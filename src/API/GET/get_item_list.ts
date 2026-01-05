@@ -1,14 +1,9 @@
-import { isHttpRequestError, shopeeGet } from "../../services/requestApiShopee.service.js";
+import { isHttpRequestError, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
 import { InfoSellerConfig } from "../../config.js";
 
 export type GetItemListItemStatus = 'NORMAL' | 'UNLIST' | 'BANNED' | 'DELETED';
 
-export interface GetItemListResponse {
-    error: string; /** Vem "" quando OK */
-    message: string; /** Vem "" quando OK */
-    warning?: string; /** Pode vir vazio */
-    request_id: string;
-    response: {
+type GetItemListResponse = ShopeeEnvelope<{
         has_next_page: boolean | 0 | 1;
         item: Array<{
             item_id: number,
@@ -18,8 +13,7 @@ export interface GetItemListResponse {
         next_offset: number;
         total_count: number;
         next?: any /** Pode aparecer (às vezes vazio) */
-    }
-}
+}>
 
 export async function get_item_list(offset: number = 0, pageSize: number = 50, itemStatus: GetItemListItemStatus = 'NORMAL'): Promise<GetItemListResponse> {
     const url = InfoSellerConfig.host + "/api/v2/product/get_item_list";
