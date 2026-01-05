@@ -1,8 +1,22 @@
 import { InfoSellerConfig } from "../../config.js";
 import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
 
+/**
+ * A Shopee às vezes retorna flags booleanas como `true/false` e às vezes como `0/1`.
+ * Esse tipo padroniza isso pra evitar dor de cabeça no TS.
+ */
 type ShopeeBool = boolean | 0 | 1;
 
+/**
+ * Resposta do endpoint `get_model_list`.
+ *
+ * Retorna as variações (“models”) de UM anúncio (`item_id`):
+ * - `tier_variation`: opções/atributos (ex.: cor, tamanho) e imagens das opções
+ * - `model`: lista de variações com `model_id`, SKU, preço, estoque, etc.
+ *
+ * Observação: alguns campos podem não vir dependendo do anúncio e do tipo de produto,
+ * por isso há muitos opcionais.
+ */
 export type GetModelListResponse = ShopeeEnvelope<{
     tier_variation?: Array<{
         name?: string;
@@ -19,7 +33,8 @@ export type GetModelListResponse = ShopeeEnvelope<{
         promotion_id?: number;
         has_promotion?: ShopeeBool;
 
-        tier_index?: number[]; // pode vir vazio dependendo do caso
+        /** Índices que apontam para as opções em `tier_variation`. */
+        tier_index?: number[];
 
         price_info?: Array<{
             current_price?: number;
@@ -81,6 +96,24 @@ export type GetModelListResponse = ShopeeEnvelope<{
     }>;
 }>;
 
+/**
+ * Lista as variações (`model_id`) de UM anúncio (`item_id`).
+ *
+ * Esse endpoint é por item (não aceita lista).
+ * Use quando:
+ * - `get_item_base_info` indicar `has_model = true`
+ * - você precisar atualizar preço por variação (`update_price`)
+ * - você precisar aplicar promoção por variação (`add_discount_item`)
+ *
+ * @param itemId ID do anúncio (`item_id`) para consultar variações.
+ * @returns Envelope padrão da Shopee contendo as variações (`model`) e atributos (`tier_variation`).
+ * @throws {Error} Se ocorrer erro HTTP (Axios) ou erro “de negócio” (error/message preenchidos).
+ *
+ * @example
+ * const models = await get_model_list(53553342037);
+ * console.log(models.response.tier_variation?.[0]);
+ * console.log(models.response.model?.[0]?.model_id);
+ */
 export async function get_model_list(itemId: number): Promise<GetModelListResponse> {
     const url = InfoSellerConfig.host + "/api/v2/product/get_model_list";
     const res = await shopeeGet<GetModelListResponse>(url,

@@ -2,6 +2,13 @@ import { InfoSellerConfig } from "../../config.js"
 import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
 import { GetItemListItemStatus } from "./get_item_list.js";
 
+/**
+ * Resposta do endpoint `get_item_base_info`.
+ *
+ * Retorna informações “base” de múltiplos anúncios de uma vez, a partir de uma lista de `item_id`.
+ * Observação: vários campos podem vir ausentes dependendo do item, categoria ou permissões,
+ * por isso a maioria está como opcional (`?`).
+ */
 type GetItemBaseInfoResponse = ShopeeEnvelope<{
     item_list: Array<{
         item_id: number;
@@ -34,8 +41,10 @@ type GetItemBaseInfoResponse = ShopeeEnvelope<{
             is_free?: boolean;
         }>;
 
+        /** Indica se possui variações (às vezes boolean puro ou 0/1). */
         has_model?: boolean | 0 | 1;
 
+        /** Timestamps Unix (segundos). */
         update_time?: number;
         create_time?: number;
 
@@ -45,9 +54,25 @@ type GetItemBaseInfoResponse = ShopeeEnvelope<{
     }>;
 }>
 
+/**
+ * Busca as informações base de vários anúncios (itens) de uma vez.
+ *
+ * Útil pra “enriquecer” os `item_id` obtidos no `get_item_list`,
+ * trazendo nome, SKU, dimensões, imagens, etc.
+ *
+ * @param itemIdList Lista de IDs de anúncios (`item_id`) para consultar.
+ * @returns Envelope padrão da Shopee contendo `item_list`.
+ * @throws {Error} Se ocorrer erro HTTP (Axios) ou erro “de negócio” (error/message preenchidos).
+ *
+ * @example
+ * const list = await get_item_list(0, 50, "NORMAL");
+ * const ids = list.response.item.map(i => i.item_id);
+ * const base = await get_item_base_info(ids);
+ * console.log(base.response.item_list[0]?.item_sku);
+ */
 export async function get_item_base_info(itemIdList: number[]): Promise<GetItemBaseInfoResponse> {
     const url = InfoSellerConfig.host + "/api/v2/product/get_item_base_info";
-    const res = await shopeeGet<GetItemBaseInfoResponse>(url, 
+    const res = await shopeeGet<GetItemBaseInfoResponse>(url,
         { access_token: true, shop_id: true },
         { item_id_list: itemIdList }
     );
