@@ -10,3 +10,4 @@ console.log(itemIdList);
 
 const baseInfos = await get_item_base_info(itemIdList);
 console.log(baseInfos);
+console.log(baseInfos.response.item_list[0])
