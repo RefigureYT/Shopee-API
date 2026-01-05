@@ -1,5 +1,5 @@
 import { InfoSellerConfig } from "../../config.js";
-import { isHttpRequestError, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
+import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
 
 type ShopeeBool = boolean | 0 | 1;
 
@@ -44,7 +44,7 @@ export type GetModelListResponse = ShopeeEnvelope<{
             seller_stock?: Array<{
                 location_id?: string;
                 stock?: number;
-                if_saleable?: ShopeeBool; // confira o nome exato no retorno real
+                if_saleable?: ShopeeBool;
             }>;
             shopee_stock?: Array<{
                 location_id?: string;
@@ -83,28 +83,13 @@ export type GetModelListResponse = ShopeeEnvelope<{
 
 export async function get_model_list(itemId: number): Promise<GetModelListResponse> {
     const url = InfoSellerConfig.host + "/api/v2/product/get_model_list";
-    const response = await shopeeGet<GetModelListResponse>(url, {
-        access_token: true,
-        shop_id: true
-    }, {
-        item_id: itemId
-    });
+    const res = await shopeeGet<GetModelListResponse>(url,
+        { access_token: true, shop_id: true },
+        { item_id: itemId }
+    );
 
-    //? Valida a resposta
-    if (isHttpRequestError(response)) {
-        throw new Error(
-            `[Shopee][HTTP] ${response.status ?? ""} ${response.error}: ${response.message}`
-        );
-    }
-
-    //? Erro "de negócio" da Shopee (HTTP 200 mas error/message preenchidos)
-    if (response.error) {
-        throw new Error(
-            `[Shopee][API] ${response.error}: ${response.message || "Sem mensagem"}`
-        );
-    }
-
-    return response;
+    //? Valida response
+    return assertShopeeOk(res);
 }
 // curl -G 'https://partner.shopeemobile.com/api/v2/product/get_model_list' \
 //   --data-urlencode 'partner_id=SEU_PARTNER_ID' \

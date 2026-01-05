@@ -1,5 +1,5 @@
 import { InfoSellerConfig } from "../../config.js"
-import { isHttpRequestError, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
+import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
 import { GetItemListItemStatus } from "./get_item_list.js";
 
 type GetItemBaseInfoResponse = ShopeeEnvelope<{
@@ -47,28 +47,13 @@ type GetItemBaseInfoResponse = ShopeeEnvelope<{
 
 export async function get_item_base_info(itemIdList: number[]): Promise<GetItemBaseInfoResponse> {
     const url = InfoSellerConfig.host + "/api/v2/product/get_item_base_info";
-    const response = await shopeeGet<GetItemBaseInfoResponse>(url, {
-        access_token: true,
-        shop_id: true
-    }, {
-        item_id_list: itemIdList
-    });
+    const res = await shopeeGet<GetItemBaseInfoResponse>(url, 
+        { access_token: true, shop_id: true },
+        { item_id_list: itemIdList }
+    );
 
-    //? Valida a resposta
-    if (isHttpRequestError(response)) {
-        throw new Error(
-            `[Shopee][HTTP] ${response.status ?? ""} ${response.error}: ${response.message}`
-        );
-    }
-
-    //? Erro "de negócio" da Shopee (HTTP 200 mas error/message preenchidos)
-    if (response.error) {
-        throw new Error(
-            `[Shopee][API] ${response.error}: ${response.message || "Sem mensagem"}`
-        );
-    }
-
-    return response;
+    //? Valida response
+    return assertShopeeOk(res);
 }
 
 

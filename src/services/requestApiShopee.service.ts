@@ -38,8 +38,28 @@ export type HttpRequestResponseError = {
 
 export type HttpRequestResponse<TSuccess> = TSuccess | HttpRequestResponseError;
 
-export function isHttpRequestError<TSuccess>(res: HttpRequestResponse<TSuccess>): res is HttpRequestResponseError {
+function isHttpRequestError<TSuccess>(res: HttpRequestResponse<TSuccess>): res is HttpRequestResponseError {
     return typeof res === "object" && res !== null && "ok" in res && (res as any).ok === false;
+}
+
+export function assertShopeeOk<TResponse>(
+    res: HttpRequestResponse<ShopeeEnvelope<TResponse>>
+): ShopeeEnvelope<TResponse> {
+    if (isHttpRequestError(res)) {
+        throw new Error(`[Shopee][HTTP] ${res.status ?? ""} ${res.error}: ${res.message}`);
+    }
+
+    if (res.error) {
+        throw new Error(`[Shopee][API] ${res.error}: ${res.message || "Sem mensagem"}`);
+    }
+
+    return res;
+}
+
+export function unwrapShopee<TResponse>(
+    res: HttpRequestResponse<ShopeeEnvelope<TResponse>>
+): TResponse {
+    return assertShopeeOk(res).response;
 }
 
 interface ShopeeAuthFlags {
