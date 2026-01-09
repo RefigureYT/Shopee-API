@@ -11,6 +11,14 @@ import { InfoSellerConfig } from "../../config.js";
  */
 export type GetItemListItemStatus = 'NORMAL' | 'UNLIST' | 'BANNED' | 'DELETED';
 
+export type ItemListData = Array<{
+    item_id: number,
+    item_status: GetItemListItemStatus,
+
+    /** Última atualização do item (Unix timestamp em segundos). */
+    update_time: number
+}>;
+
 /**
  * Resposta do endpoint `get_item_list`.
  *
@@ -22,13 +30,7 @@ type GetItemListResponse = ShopeeEnvelope<{
     has_next_page: boolean | 0 | 1;
 
     /** Lista de itens retornados na página atual. */
-    item: Array<{
-        item_id: number,
-        item_status: GetItemListItemStatus,
-
-        /** Última atualização do item (Unix timestamp em segundos). */
-        update_time: number
-    }>;
+    item: ItemListData;
 
     /** Offset para a próxima página. */
     next_offset: number;

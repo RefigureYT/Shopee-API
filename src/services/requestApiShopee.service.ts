@@ -204,8 +204,16 @@ export async function shopeeGet<TSuccess>(urlWithPath: string, parameters: Shope
         const encodedKey = encodeURIComponent(key);
 
         if (Array.isArray(val)) {
-            const encodedValue = encodeURIComponent(JSON.stringify(val));
-            url += `&${encodedKey}=${encodedValue}`;
+            // Shopee (ex.: item_id_list) NÃO aceita JSON "[1,2,3]" na query.
+            // Envia como CSV "1,2,3" (sem colchetes).
+            if (val.length === 0) continue;
+
+            const hasObject = val.some((v) => typeof v === "object" && v !== null);
+            const rawValue = hasObject
+                ? JSON.stringify(val)               // fallback (caso algum dia você realmente passe objetos)
+                : val.map((v) => String(v)).join(",");
+
+            url += `&${encodedKey}=${encodeURIComponent(rawValue)}`;
             continue;
         }
 
@@ -263,11 +271,25 @@ export async function shopeeGet<TSuccess>(urlWithPath: string, parameters: Shope
  * @param bodyOptional Campos específicos do endpoint (ex.: item_id, price_list, discount_id...).
  * @returns `TSuccess` em sucesso, ou `HttpRequestResponseError` em erro de transporte.
  */
-export async function shopeePost<TSuccess>(urlWithPath: string, parameters: ShopeeAuthFlags, bodyOptional: Record<string, unknown>): Promise<HttpRequestResponse<TSuccess>> {
+export async function shopeePost<TSuccess>(
+    urlWithPath: string,
+    parameters: ShopeeAuthFlags,
+    bodyOptional: Record<string, unknown>
+): Promise<HttpRequestResponse<TSuccess>> {
     const info = InfoSellerConfig;
-    const path = urlWithPath.replace(info.host, "");
+
+    const rawPath = urlWithPath.replace(info.host, "");
+    const path = rawPath.split("?")[0];
+
     const timestamp = Math.floor(Date.now() / 1000);
 
+
+    if (!info.partnerId) {
+        throw new Error("[Shopee][CONFIG] partnerId não definido (PARTNER_ID no .env).");
+    }
+    if (!info.partnerKey) {
+        throw new Error("[Shopee][CONFIG] partnerKey não definido (PARTNER_KEY no .env).");
+    }
     const objSign: ObjSign = {
         partnerId: info.partnerId,
         partnerKey: info.partnerKey,
@@ -280,17 +302,26 @@ export async function shopeePost<TSuccess>(urlWithPath: string, parameters: Shop
 
     const sign = signPartner(objSign);
 
-    const body: ShopeePostBody = {
-        ...bodyOptional,
+    const query: Record<string, string | number> = {
         partner_id: info.partnerId,
         timestamp,
         sign
-    }
-    if (parameters.access_token) body.access_token = info.accessToken;
-    if (parameters.shop_id) body.shop_id = info.shopId;
+    };
+
+    if (parameters.access_token) query.access_token = info.accessToken;
+    if (parameters.shop_id) query.shop_id = info.shopId;
 
     try {
-        const { data: dataResponse } = await axios.post<TSuccess>(urlWithPath, body, { headers: { "Content-Type": "application/json" } });
+        console.log("POST", urlWithPath, query);
+        console.log('BODY', bodyOptional);
+        const { data: dataResponse } = await axios.post<TSuccess>(
+            urlWithPath,
+            bodyOptional,
+            {
+                params: query,
+                headers: { "Content-Type": "application/json" }
+            }
+        );
         return dataResponse;
     } catch (err: unknown) {
         // Erros HTTP / rede do Axios

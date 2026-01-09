@@ -18,7 +18,7 @@ type AddDiscountObjParameters = {
  * Resposta ao criar uma campanha de desconto.
  * Em alguns cenários o `response` pode trazer `discount_id`.
  */
-type AddDiscountResponse = ShopeeEnvelope<{ discount_id: number }>;
+export type AddDiscountResponse = ShopeeEnvelope<{ discount_id: number }>;
 
 /**
  * Cria uma campanha de desconto (promoção) na Shopee.

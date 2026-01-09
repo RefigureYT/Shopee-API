@@ -2,6 +2,205 @@ import { InfoSellerConfig } from "../../config.js"
 import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
 import { GetItemListItemStatus } from "./get_item_list.js";
 
+export type GetItemBaseInfoResponseItemList = {
+    /** ID do anúncio/produto na Shopee. */
+    item_id: number;
+
+    /** Nome do anúncio. */
+    item_name?: string;
+
+    /** SKU do seller (se existir). */
+    item_sku?: string;
+
+    /** Status do anúncio (ex.: NORMAL, UNLIST, etc.). */
+    item_status?: GetItemListItemStatus;
+
+    /** ID da categoria do anúncio. */
+    category_id?: number;
+
+    /** Descrição do anúncio (texto longo). */
+    description?: string;
+
+    /** Indica o “tipo”/formato da descrição retornada pela API. */
+    description_type?: string;
+
+    /** Marca do produto (quando cadastrada). */
+    brand?: {
+        /** ID interno da marca na Shopee. */
+        brand_id?: number;
+        /** Nome original da marca. */
+        original_brand_name?: string;
+    };
+
+    /** Informações de imagens principais do anúncio. */
+    image?: {
+        /** Lista de IDs de imagem. */
+        image_id_list?: string[];
+        /** Lista de URLs de imagem. */
+        image_url_list?: string[];
+        /** Proporção/ratio quando disponível (ex.: "1:1"). */
+        image_ratio?: string;
+    };
+
+    /** Preços do anúncio (pode vir lista por moeda). */
+    price_info?: Array<{
+        /** Moeda (ex.: BRL). */
+        currency?: string;
+        /** Preço “cheio”/original. */
+        original_price?: number;
+        /** Preço atual exibido. */
+        current_price?: number;
+    }>;
+
+    /**
+     * Peso (algumas respostas vêm como string — ex.: "5").
+     * Mantenho amplo para não quebrar em runtime.
+     */
+    weight?: number | string;
+
+    /**
+     * Dimensões “soltas” (alguns endpoints/versões retornam assim).
+     * Observação: no seu JSON também veio dentro de `dimension`.
+     */
+    package_length?: number;
+    package_width?: number;
+    package_height?: number;
+
+    /** Dimensões de embalagem (muito comum vir aqui). */
+    dimension?: {
+        /** Comprimento da embalagem. */
+        package_length?: number;
+        /** Largura da embalagem. */
+        package_width?: number;
+        /** Altura da embalagem. */
+        package_height?: number;
+    };
+
+    /** Prazo padrão de despacho (dias). */
+    days_to_ship?: number;
+
+    /** Informações de logística/frete habilitadas no item. */
+    logistic_info?: Array<{
+        /** ID do método logístico. */
+        logistic_id?: number;
+        /** Nome do método logístico. */
+        logistic_name?: string;
+        /** Se está habilitado para o item. */
+        enabled?: boolean;
+        /** ID de tamanho de envio (quando aplicável). */
+        size_id?: number;
+        /** Se é frete grátis. */
+        is_free?: boolean;
+    }>;
+
+    /** Pré-venda e prazo (quando aplicável). */
+    pre_order?: {
+        /** Se é pré-venda. */
+        is_pre_order?: boolean;
+        /** Dias para envio em pré-venda. */
+        days_to_ship?: number;
+    };
+
+    /** Condição do produto (ex.: NEW). */
+    condition?: string;
+
+    /** Texto do size chart (pode vir vazio). */
+    size_chart?: string;
+
+    /** ID do size chart (quando aplicável). */
+    size_chart_id?: number;
+
+    /**
+     * Indica se possui variações (às vezes boolean puro ou 0/1).
+     */
+    has_model?: boolean | 0 | 1;
+
+    /** ID de promoção associada (quando existir). */
+    promotion_id?: number;
+
+    /**
+     * Indica se está em alguma promoção (às vezes boolean puro ou 0/1).
+     */
+    has_promotion?: boolean | 0 | 1;
+
+    /** GTIN/EAN do produto (quando fornecido). */
+    gtin_code?: string;
+
+    /** Sinalizador interno relacionado a itens perigosos (quando existir). */
+    item_dangerous?: number;
+
+    /** Imagens específicas de promoção (quando existir). */
+    promotion_image?: {
+        /** Lista de IDs de imagem. */
+        image_id_list?: string[];
+        /** Lista de URLs de imagem. */
+        image_url_list?: string[];
+    };
+
+    /** Campo de “deboost” (às vezes vem como string tipo "FALSE"). */
+    deboost?: string;
+
+    /** Informações de compatibilidade (normalmente objeto aberto). */
+    compatibility_info?: Record<string, unknown>;
+
+    /** ID de marca autorizada (quando aplicável). */
+    authorised_brand_id?: number;
+
+    /** Se é fulfillment by Shopee. */
+    is_fulfillment_by_shopee?: boolean;
+
+    /** Informações de limite mínimo de compra. */
+    purchase_limit_info?: {
+        /** Limite mínimo por compra (ex.: 1). */
+        min_purchase_limit?: number;
+    };
+
+    /**
+     * Estoque v2 (pode trazer múltiplas seções: seller/shopee/advance).
+     * Aqui eu tiparei o que você já usa e o que apareceu no seu JSON,
+     * deixando o resto flexível sem perder segurança do essencial.
+     */
+    stock_info_v2: {
+        /** Resumo de estoque. */
+        summary_info: {
+            /** Total reservado. */
+            total_reserved_stock: number;
+            /** Total disponível para venda. */
+            total_available_stock: number;
+        };
+
+        /** Estoque do seller (estrutura pode variar). */
+        seller_stock?: Array<Record<string, unknown>>;
+
+        /** Estoque da Shopee (estrutura pode variar). */
+        shopee_stock?: Array<Record<string, unknown>>;
+
+        /** Estoque avançado (quando existir). */
+        advance_stock?: {
+            /** Estoque “sellable” avançado. */
+            sellable_advance_stock?: number;
+            /** Estoque avançado em trânsito. */
+            in_transit_advance_stock?: number;
+            /** Campos extras possíveis. */
+            [key: string]: unknown;
+        };
+
+        /** Campos extras possíveis. */
+        [key: string]: unknown;
+    };
+
+    /** Timestamps Unix (segundos). */
+    update_time?: number;
+    /** Timestamps Unix (segundos). */
+    create_time?: number;
+
+    /** Tags gerais do item. */
+    tag?: {
+        /** Se é kit/bundle. */
+        kit?: boolean;
+    };
+};
+
 /**
  * Resposta do endpoint `get_item_base_info`.
  *
@@ -9,51 +208,7 @@ import { GetItemListItemStatus } from "./get_item_list.js";
  * Observação: vários campos podem vir ausentes dependendo do item, categoria ou permissões,
  * por isso a maioria está como opcional (`?`).
  */
-type GetItemBaseInfoResponse = ShopeeEnvelope<{
-    item_list: Array<{
-        item_id: number;
-        item_name?: string;
-        item_sku?: string;
-        item_status?: GetItemListItemStatus;
-        category_id?: number;
-        description?: string;
-
-        brand?: {
-            brand_id?: number;
-            original_brand_name?: string;
-        };
-
-        image?: {
-            image_id_list?: string[];
-            image_url_list?: string[];
-        };
-
-        weight?: number;
-        package_length?: number;
-        package_width?: number;
-        package_height?: number;
-        days_to_ship?: number;
-
-        logistic_info?: Array<{
-            logistic_id?: number;
-            logistic_name?: string;
-            enabled?: boolean;
-            is_free?: boolean;
-        }>;
-
-        /** Indica se possui variações (às vezes boolean puro ou 0/1). */
-        has_model?: boolean | 0 | 1;
-
-        /** Timestamps Unix (segundos). */
-        update_time?: number;
-        create_time?: number;
-
-        tag?: {
-            kit?: boolean;
-        };
-    }>;
-}>
-
+export type GetItemBaseInfoResponse = ShopeeEnvelope<{ item_list: GetItemBaseInfoResponseItemList[]; }>
 /**
  * Busca as informações base de vários anúncios (itens) de uma vez.
  *
