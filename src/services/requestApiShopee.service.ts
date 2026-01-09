@@ -312,8 +312,8 @@ export async function shopeePost<TSuccess>(
     if (parameters.shop_id) query.shop_id = info.shopId;
 
     try {
-        console.log("POST", urlWithPath, query);
-        console.log('BODY', bodyOptional);
+        // console.log("POST", urlWithPath, query); //TODO [DEBUG]
+        // console.log('BODY', bodyOptional); //TODO [DEBUG]
         const { data: dataResponse } = await axios.post<TSuccess>(
             urlWithPath,
             bodyOptional,
