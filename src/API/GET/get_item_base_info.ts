@@ -1,6 +1,7 @@
 import { InfoSellerConfig } from "../../config.js"
-import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
-import { GetItemListItemStatus } from "./get_item_list.js";
+import { assertShopeeOk, shopeeGet } from "../../services/requestApiShopee.service.js";
+import type { GetItemListItemStatus } from "./get_item_list.js";
+import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js";
 
 export type GetItemBaseInfoResponseItemList = {
     /** ID do anúncio/produto na Shopee. */

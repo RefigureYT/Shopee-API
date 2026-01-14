@@ -11,11 +11,11 @@ interface InfoSellerConfig {
     accessToken: string;
 }
 // ======================================================
-const _accessToken: string = process.env.ACCESS_TOKEN || "";
-const _shopId: string = process.env.SHOP_ID || "";
-const _partnerKey: string = process.env.PARTNER_KEY || "";
-const _partnerId: string = process.env.PARTNER_ID || "";
-const _host: string = process.env.HOST || "https://partner.shopeemobile.com"; //? URL de produção como fallback
+const _accessToken: string = process.env["ACCESS_TOKEN"] || "";
+const _shopId: string = process.env["SHOP_ID"] || "";
+const _partnerKey: string = process.env["PARTNER_KEY"] || "";
+const _partnerId: string = process.env["PARTNER_ID"] || "";
+const _host: string = process.env["HOST"] || "https://partner.shopeemobile.com"; //? URL de produção como fallback
 
 if (_accessToken === "" || _shopId === "" || _partnerKey === "" || _partnerId === "") {
     console.error(chalk.red.bold("❌ Erro: Arquivo de variáveis do ambiente está incompleto."));

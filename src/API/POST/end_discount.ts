@@ -1,5 +1,6 @@
 import { InfoSellerConfig } from "../../config.js";
-import { assertShopeeOk, ShopeeEnvelope, shopeePost } from "../../services/requestApiShopee.service.js";
+import { assertShopeeOk, shopeePost } from "../../services/requestApiShopee.service.js";
+import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js";
 
 type ResponseSuccess = ShopeeEnvelope<{
     discount_id: number;

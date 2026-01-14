@@ -1,6 +1,6 @@
 import { InfoSellerConfig } from "../../config.js";
-import { assertShopeeOk, ShopeeEnvelope, shopeePost } from "../../services/requestApiShopee.service.js";
-
+import { assertShopeeOk, shopeePost } from "../../services/requestApiShopee.service.js";
+import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js";
 /**
  * Resposta ao adicionar itens a uma campanha de desconto.
  * Pode haver sucesso e falha misturados na mesma chamada:

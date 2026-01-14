@@ -142,14 +142,6 @@ type ObjSign = {
     shopId?: number
 }
 
-interface ShopeePostBody {
-    partner_id: number,
-    timestamp: number,
-    sign: string,
-    access_token?: string,
-    shop_id?: number,
-    [key: string]: unknown;
-}
 // =================================================================
 
 /**
@@ -280,7 +272,7 @@ export async function shopeePost<TSuccess>(
 
     const rawPath = urlWithPath.replace(info.host, "");
     const path = rawPath.split("?")[0];
-
+    if (!path) throw new Error(`[requestApiShopee] Ocorreu um erro ao definir o path. rawPath: ${rawPath}, urlWithPath: ${urlWithPath}, info.host: ${info.host}`);
     const timestamp = Math.floor(Date.now() / 1000);
 
 
@@ -308,8 +300,8 @@ export async function shopeePost<TSuccess>(
         sign
     };
 
-    if (parameters.access_token) query.access_token = info.accessToken;
-    if (parameters.shop_id) query.shop_id = info.shopId;
+    if (parameters.access_token) query["access_token"] = info.accessToken;
+    if (parameters.shop_id) query["shop_id"] = info.shopId;
 
     try {
         // console.log("POST", urlWithPath, query); //TODO [DEBUG]

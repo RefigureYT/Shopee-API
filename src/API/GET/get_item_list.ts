@@ -1,5 +1,6 @@
-import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
+import { assertShopeeOk, shopeeGet } from "../../services/requestApiShopee.service.js";
 import { InfoSellerConfig } from "../../config.js";
+import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js";
 
 /**
  * Status possível de um anúncio (item) na Shopee.

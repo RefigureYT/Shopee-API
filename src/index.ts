@@ -2,7 +2,7 @@
 //TODO [UTILIZE IMPORT PARA IMPORTAR AS FUNÇÕES PRONTAS]
 
 //? [GET IMPORTS]
-import { get_discount_list, RequestParameter } from "./API/GET/get_discount_list.js";
+import { get_discount_list } from "./API/GET/get_discount_list.js";
 import { get_item_base_info } from "./API/GET/get_item_base_info.js";
 import { get_item_list } from "./API/GET/get_item_list.js";
 import { get_model_list } from "./API/GET/get_model_list.js";

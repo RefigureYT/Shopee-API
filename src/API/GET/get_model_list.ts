@@ -1,5 +1,6 @@
 import { InfoSellerConfig } from "../../config.js";
-import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
+import { assertShopeeOk, shopeeGet } from "../../services/requestApiShopee.service.js";
+import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js";
 
 /**
  * A Shopee às vezes retorna flags booleanas como `true/false` e às vezes como `0/1`.

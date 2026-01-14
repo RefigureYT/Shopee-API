@@ -1,5 +1,6 @@
 import { InfoSellerConfig } from "../../config.js";
-import { assertShopeeOk, ShopeeEnvelope, shopeeGet } from "../../services/requestApiShopee.service.js";
+import { assertShopeeOk, shopeeGet } from "../../services/requestApiShopee.service.js";
+import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js";
 
 export type RequestParameter = {
     discount_status: DiscountListStatus; /** Filtro de status para recuperar a lista de descontos. Valores disponíveis: próximos/em andamento/expirados/todos. */
