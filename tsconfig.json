@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
         "target": "ESNext", /** Target define para qual versão do JS o código será convertido. */
-        "module": "NodeNext", /** A opção 'module' deve ser definida como 'NodeNext' quando a opção 'moduleResolution' está definida como 'NodeNext'. */
-        "moduleResolution": "NodeNext", /** Define como o TS encontra seus arquivos seguindo as regras restritas do Node moderno. */
+        "module": "preserve", /** A opção 'module' deve ser definida como 'NodeNext' quando a opção 'moduleResolution' está definida como 'NodeNext'. */
+        "moduleResolution": "bundler", /** Define como o TS encontra seus arquivos seguindo as regras restritas do Node moderno. */
         "strict": true, /** Ativa todas as checagens rigorosas de tipo básicas. */
         "noImplicitAny": true, /** Proíbe o uso de 'any' quando o TS não consegue inferir o tipo automaticamente. */
         "strictNullChecks": true, /** Obriga a tratar explicitamente valores que podem ser 'null' ou 'undefined'. */

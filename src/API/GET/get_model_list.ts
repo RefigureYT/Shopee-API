@@ -8,17 +8,7 @@ import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js"
  */
 type ShopeeBool = boolean | 0 | 1;
 
-/**
- * Resposta do endpoint `get_model_list`.
- *
- * Retorna as variações (“models”) de UM anúncio (`item_id`):
- * - `tier_variation`: opções/atributos (ex.: cor, tamanho) e imagens das opções
- * - `model`: lista de variações com `model_id`, SKU, preço, estoque, etc.
- *
- * Observação: alguns campos podem não vir dependendo do anúncio e do tipo de produto,
- * por isso há muitos opcionais.
- */
-export type GetModelListResponse = ShopeeEnvelope<{
+export type GetModelList = {
     tier_variation?: Array<{
         name?: string;
         option_list?: Array<{
@@ -95,7 +85,19 @@ export type GetModelListResponse = ShopeeEnvelope<{
             image_url?: string;
         }>;
     }>;
-}>;
+}
+
+/**
+ * Resposta do endpoint `get_model_list`.
+ *
+ * Retorna as variações (“models”) de UM anúncio (`item_id`):
+ * - `tier_variation`: opções/atributos (ex.: cor, tamanho) e imagens das opções
+ * - `model`: lista de variações com `model_id`, SKU, preço, estoque, etc.
+ *
+ * Observação: alguns campos podem não vir dependendo do anúncio e do tipo de produto,
+ * por isso há muitos opcionais.
+ */
+export type GetModelListResponse = ShopeeEnvelope<GetModelList>;
 
 /**
  * Lista as variações (`model_id`) de UM anúncio (`item_id`).

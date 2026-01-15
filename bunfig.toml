@@ -1,0 +1,2 @@
+# scripts executados antes de qualquer "bun run ..."
+preload = ["./src/preload.ts"]

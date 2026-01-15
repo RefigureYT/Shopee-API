@@ -11,14 +11,15 @@ import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js"
  * - DELETED: anúncio deletado/removido.
  */
 export type GetItemListItemStatus = 'NORMAL' | 'UNLIST' | 'BANNED' | 'DELETED';
-
-export type ItemListData = Array<{
+export type ItemData = {
     item_id: number,
     item_status: GetItemListItemStatus,
 
     /** Última atualização do item (Unix timestamp em segundos). */
     update_time: number
-}>;
+}
+
+export type ItemListData = Array<ItemData>;
 
 /**
  * Resposta do endpoint `get_item_list`.
