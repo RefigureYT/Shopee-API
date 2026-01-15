@@ -10,7 +10,7 @@ import type { ShopeeEnvelope } from "../../services/requestApiShopee.service.js"
  * - BANNED: anúncio banido/restrito.
  * - DELETED: anúncio deletado/removido.
  */
-export type GetItemListItemStatus = 'NORMAL' | 'UNLIST' | 'BANNED' | 'DELETED';
+export type GetItemListItemStatus = 'NORMAL' | 'UNLIST' | 'BANNED' | 'DELETED' | 'REVIEWING' | 'SELLER_DELETE' | 'SHOPEE_DELETE';
 export type ItemData = {
     item_id: number,
     item_status: GetItemListItemStatus,
