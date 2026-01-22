@@ -1,5 +1,5 @@
 {
-  "name": "shopee-api",
+  "name": "@refigure/shopee-api",
   "version": "1.0.0",
   "description": "Shopee Partner API v2 SDK (TypeScript) - sign + helpers + endpoints",
   "type": "module",
@@ -19,9 +19,7 @@
   "scripts": {
     "dev": "bun run src/examples/basic.ts",
     "typecheck": "tsc --noEmit",
-    "build": "tsc",
-    "prepare": "bun run build",
-    "postinstall": "bun run build"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
