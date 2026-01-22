@@ -147,3 +147,9 @@ mapa_diretorio.ini
 mapa_visual.txt
 adsInfoShopee.json
 products.json
+
+node_modules/
+build/
+.env
+.env.*
+!.env.example

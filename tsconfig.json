@@ -26,6 +26,10 @@
         "verbatimModuleSyntax": true, /** [SEGURANÇA MÁXIMA] Exige sintaxe explícita para importação de tipos ('import type'). */
         "noEmitOnError": true, /** Impede que o build termine se houver qualquer erro de tipagem. */
 
+        /** Serve para gerar .d.ts */
+        "declaration": true,
+        "declarationMap": true,
+
         "rootDir": "src", /** Pasta raiz do seu código fonte. */
         "outDir": "build", /** Pasta onde o código final compilado será salvo. */
         "skipLibCheck": true /** Ignora checagem de tipos dentro da pasta node_modules para ganhar performance. */

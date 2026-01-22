@@ -1,26 +1,25 @@
 {
   "name": "shopee-api",
   "version": "1.0.0",
-  "description": "Feito para auxiliar no consumo dos recursos da API do marketplace Shopee",
-  "main": "build/index.js",
+  "description": "Shopee Partner API v2 SDK (TypeScript) - sign + helpers + endpoints",
+  "type": "module",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "build",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "dev": "bun run src/index.ts",
-    "start": "bun run src/index.ts",
+    "dev": "bun run examples/basic.ts",
     "typecheck": "tsc --noEmit",
-    "build": "bun build ./src/index.ts --outdir ./build --target bun"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RefigureYT/Shopee-API.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/RefigureYT/Shopee-API/issues"
-  },
-  "homepage": "https://github.com/RefigureYT/Shopee-API#readme",
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.13.2",
     "chalk": "^5.6.2",
