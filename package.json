@@ -1,6 +1,6 @@
 {
   "name": "@refigure/shopee-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shopee Partner API v2 SDK (TypeScript) - sign + helpers + endpoints",
   "type": "module",
   "main": "./build/index.js",
