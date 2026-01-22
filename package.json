@@ -13,7 +13,8 @@
   "scripts": {
     "dev": "bun run examples/basic.ts",
     "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "bun run build"
   },
   "repository": {
     "type": "git",
