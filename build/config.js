@@ -20,7 +20,7 @@ PARTNER_ID=""
 HOST="https://partner.shopeemobile.com" # Ou https://partner.test-stable.shopeemobile.com se for teste
 DATABASE_URL="postgres://USUARIO:SENHA@HOST:5432/NOME_DO_BANCO
 DB_SCHEMA=""
-Db_TABLE=""`));
+DB_TABLE=""`));
     process.exit(1);
 }
 export const InfoSellerConfig = {
