@@ -149,7 +149,6 @@ adsInfoShopee.json
 products.json
 
 node_modules/
-build/
 .env
 .env.*
 !.env.example
